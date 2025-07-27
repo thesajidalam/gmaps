@@ -4,72 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Machine Mode | Deloper News</title>
-    <meta name="description" content="Explore tech hub evolution through time with interactive maps">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
-    
-    <!-- Favicon -->
-    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-</head>
-<body>
-    <!-- Main Map Container -->
-    <div id="map"></div>
-    
-    <!-- Time Controls -->
-    <div class="time-controls">
-        <input type="range" min="1990" max="2025" value="2025" 
-               class="timeline-slider" id="yearSlider">
-        <div class="year-range">
-            <span>1990</span>
-            <span>2025</span>
-        </div>
-        <div id="currentYear">2025</div>
-    </div>
-    
-    <!-- Loading Indicator (Hidden by default) -->
-    <div id="loading" class="loading-indicator">
-        <div class="loader"></div>
-        <p>Traveling through time...</p>
-    </div>
-    
-    <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=visualization" async defer></script>
-    
-    <!-- App JavaScript -->
-    <script src="config.js"></script>
-    <script src="data.js"></script>
-    <script src="main.js"></script>
-    
-    <!-- Inline styles for critical elements -->
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="css/styles.css">
     <style>
-        .loading-indicator {
+        /* Critical loading styles */
+        #map { height: 100vh; width: 100%; }
+        .loading {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(10, 10, 26, 0.9);
+            background: rgba(10,10,26,0.9);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
         }
-        
-        .loading-indicator.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        
         .loader {
             border: 5px solid rgba(110, 68, 255, 0.2);
             border-top: 5px solid #6e44ff;
@@ -77,21 +31,56 @@
             width: 50px;
             height: 50px;
             animation: spin 1s linear infinite;
-            margin-bottom: 20px;
         }
-        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        .year-range {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 5px;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
     </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading" class="loading">
+        <div class="loader"></div>
+        <p style="margin-top: 20px; color: #fff;">Initializing Time Machine...</p>
+    </div>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    <!-- Time Controls -->
+    <div class="time-controls">
+        <input type="range" min="1990" max="2025" value="2025" class="timeline-slider" id="yearSlider">
+        <div class="year-display">
+            <span>1990</span>
+            <span>2025</span>
+        </div>
+        <div id="currentYear">2025</div>
+    </div>
+
+    <!-- Google Maps API with YOUR KEY -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdyGwUTzp43BvST1D5wSuFmey0jiwprd8&callback=initMap&libraries=places,visualization" async defer></script>
+    
+    <!-- Your JavaScript Files -->
+    <script src="config.js"></script>
+    <script src="data.js"></script>
+    <script src="main.js"></script>
+
+    <!-- Fallback initialization -->
+    <script>
+        // If Google Maps fails to callback
+        setTimeout(() => {
+            if (!window.google || !window.google.maps) {
+                document.getElementById('loading').innerHTML = 
+                    '<p style="color: #ff2d75;">Error: Google Maps failed to load. Check your API key and network connection.</p>';
+            }
+        }, 5000);
+
+        // Global init function required by Google Maps
+        function initMap() {
+            document.getElementById('loading').style.display = 'none';
+            // Your main.js should handle the rest
+        }
+    </script>
 </body>
 </html>
