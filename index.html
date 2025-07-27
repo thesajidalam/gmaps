@@ -7,22 +7,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <style>
-        /* Critical loading styles */
-        body { margin: 0; overflow: hidden; }
-        #map { height: 100vh; width: 100%; }
+        body { 
+            margin: 0; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: #0a0a1a;
+            color: #f0f4ff;
+        }
+        #map { 
+            height: 100vh; 
+            width: 100%; 
+        }
         #loading {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(10,10,26,0.9);
-            display: flex; justify-content: center;
-            align-items: center; z-index: 1000;
+            display: flex;
             flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
         .loader {
             border: 5px solid rgba(110, 68, 255, 0.2);
             border-top: 5px solid #6e44ff;
             border-radius: 50%;
-            width: 50px; height: 50px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin {
@@ -34,14 +47,13 @@
 <body>
     <div id="loading">
         <div class="loader"></div>
-        <p style="color: white; margin-top: 20px;">Loading Time Machine...</p>
+        <p>Loading Time Machine...</p>
     </div>
 
     <div id="map"></div>
 
     <div class="time-controls">
-        <input type="range" min="1990" max="2025" value="2025" 
-               class="timeline-slider" id="yearSlider">
+        <input type="range" min="1990" max="2025" value="2025" class="timeline-slider" id="yearSlider">
         <div class="year-display">
             <span>1990</span>
             <span>2025</span>
@@ -49,27 +61,48 @@
         <div id="currentYear">2025</div>
     </div>
 
-    <!-- Google Maps API with YOUR KEY -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdyGwUTzp43BvST1D5wSuFmey0jiwprd8&callback=initMap&libraries=places,visualization" async defer></script>
+    <!-- Google Maps API with error handling -->
+    <script>
+        function initMap() {
+            try {
+                const map = new google.maps.Map(document.getElementById("map"), {
+                    center: { lat: 37.7749, lng: -122.4194 },
+                    zoom: 12,
+                    styles: [
+                        { featureType: "all", elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+                        { featureType: "poi", stylers: [{ visibility: "off" }] }
+                    ]
+                });
+                document.getElementById('loading').style.display = 'none';
+            } catch (error) {
+                document.getElementById('loading').innerHTML = `
+                    <p style="color: #ff2d75; text-align: center;">
+                        Map Error: ${error.message}<br><br>
+                        Verify:<br>
+                        1. API key is valid and enabled<br>
+                        2. Required APIs are enabled in Google Cloud<br>
+                        3. Billing is activated
+                    </p>`;
+            }
+        }
+
+        function gm_authFailure() {
+            document.getElementById('loading').innerHTML = `
+                <p style="color: #ff2d75;">
+                    API Key Rejected!<br>
+                    Check Google Cloud Console restrictions for:<br>
+                    - Maps JavaScript API<br>
+                    - Places API<br>
+                    - Geocoding API
+                </p>`;
+        }
+    </script>
     
-    <!-- App Scripts -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdyGwUTzp43BvST1D5wSuFmey0jiwprd8&callback=initMap&libraries=places&v=weekly" 
+            async defer></script>
+    
     <script src="config.js"></script>
     <script src="data.js"></script>
     <script src="main.js"></script>
-
-    <!-- Fallback initialization -->
-    <script>
-        let mapLoaded = false;
-        function initMap() {
-            mapLoaded = true;
-            document.getElementById('loading').style.display = 'none';
-        }
-        setTimeout(() => {
-            if (!mapLoaded) {
-                document.getElementById('loading').innerHTML = 
-                    '<p style="color: #ff2d75;">Error: Google Maps failed to load. Check your API key and network.</p>';
-            }
-        }, 10000);
-    </script>
 </body>
 </html>
