@@ -4,32 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Machine Mode | Deloper News</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- Your CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <style>
         /* Critical loading styles */
+        body { margin: 0; overflow: hidden; }
         #map { height: 100vh; width: 100%; }
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        #loading {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(10,10,26,0.9);
-            display: flex;
+            display: flex; justify-content: center;
+            align-items: center; z-index: 1000;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
         }
         .loader {
             border: 5px solid rgba(110, 68, 255, 0.2);
             border-top: 5px solid #6e44ff;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 50px; height: 50px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin {
@@ -39,18 +32,16 @@
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loading" class="loading">
+    <div id="loading">
         <div class="loader"></div>
-        <p style="margin-top: 20px; color: #fff;">Initializing Time Machine...</p>
+        <p style="color: white; margin-top: 20px;">Loading Time Machine...</p>
     </div>
 
-    <!-- Map Container -->
     <div id="map"></div>
 
-    <!-- Time Controls -->
     <div class="time-controls">
-        <input type="range" min="1990" max="2025" value="2025" class="timeline-slider" id="yearSlider">
+        <input type="range" min="1990" max="2025" value="2025" 
+               class="timeline-slider" id="yearSlider">
         <div class="year-display">
             <span>1990</span>
             <span>2025</span>
@@ -61,26 +52,24 @@
     <!-- Google Maps API with YOUR KEY -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdyGwUTzp43BvST1D5wSuFmey0jiwprd8&callback=initMap&libraries=places,visualization" async defer></script>
     
-    <!-- Your JavaScript Files -->
-    <script src="config.js"></script>
-    <script src="data.js"></script>
-    <script src="main.js"></script>
+    <!-- App Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
 
     <!-- Fallback initialization -->
     <script>
-        // If Google Maps fails to callback
-        setTimeout(() => {
-            if (!window.google || !window.google.maps) {
-                document.getElementById('loading').innerHTML = 
-                    '<p style="color: #ff2d75;">Error: Google Maps failed to load. Check your API key and network connection.</p>';
-            }
-        }, 5000);
-
-        // Global init function required by Google Maps
+        let mapLoaded = false;
         function initMap() {
+            mapLoaded = true;
             document.getElementById('loading').style.display = 'none';
-            // Your main.js should handle the rest
         }
+        setTimeout(() => {
+            if (!mapLoaded) {
+                document.getElementById('loading').innerHTML = 
+                    '<p style="color: #ff2d75;">Error: Google Maps failed to load. Check your API key and network.</p>';
+            }
+        }, 10000);
     </script>
 </body>
 </html>
