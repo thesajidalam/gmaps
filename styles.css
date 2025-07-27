@@ -1,0 +1,160 @@
+/* fonts.css - Add this if not using CDN */
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('https://fonts.gstatic.com/s/spacegrotesk/v16/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIA.woff2') format('woff2');
+  font-weight: 300 700;
+  font-display: swap;
+}
+
+/* base.css */
+:root {
+  --primary: #6e44ff;
+  --secondary: #00f7ff;
+  --dark: #0a0a1a;
+  --light: #f0f4ff;
+  --glass: rgba(255, 255, 255, 0.08);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background-color: var(--dark);
+  color: var(--light);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* map-container.css */
+#map {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* Floating background elements - creates high-tech ambiance */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(circle at 70% 30%, rgba(110, 68, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 30% 70%, rgba(0, 247, 255, 0.1) 0%, transparent 50%);
+  z-index: -1;
+  animation: floatBackground 30s infinite alternate ease-in-out;
+}
+
+/* time-controls.css */
+.time-controls {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 600px;
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border-radius: 50px;
+  padding: 15px 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 10;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.time-controls:hover {
+  transform: translateX(-50%) scale(1.02);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.timeline-slider {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  outline: none;
+  margin: 10px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.timeline-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--light);
+  border: 3px solid var(--primary);
+  cursor: pointer;
+  box-shadow: 0 0 0 4px rgba(110, 68, 255, 0.3);
+  transition: all 0.2s ease;
+}
+
+.timeline-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 6px rgba(110, 68, 255, 0.4);
+}
+
+#currentYear {
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 5px;
+  color: var(--secondary);
+  text-shadow: 0 0 15px rgba(0, 247, 255, 0.5);
+  animation: pulse 2s infinite ease-in-out;
+}
+
+/* Animations */
+@keyframes floatBackground {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(50px, 50px) rotate(2deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    text-shadow: 0 0 15px rgba(0, 247, 255, 0.5);
+  }
+  50% {
+    opacity: 0.8;
+    text-shadow: 0 0 25px rgba(0, 247, 255, 0.8);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .time-controls {
+    width: 90%;
+    padding: 12px 20px;
+  }
+  
+  #currentYear {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .time-controls {
+    width: 95%;
+    border-radius: 30px;
+  }
+  
+  .timeline-slider::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+  }
+}
