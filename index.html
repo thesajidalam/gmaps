@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Time Machine Mode</title>
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #0a0a1a;
+            color: white;
+            margin: 0;
+        }
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        .time-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 50px;
+        }
+        .timeline-slider {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    
+    <div class="time-controls">
+        <input type="range" min="1990" max="2025" value="2025" 
+               class="timeline-slider" id="yearSlider">
+        <div id="currentYear">2025</div>
+    </div>
+
+    <script>
+        // Initialize map
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 37.7749, lng: -122.4194 },
+                zoom: 12,
+                styles: [
+                    { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+                    { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+                    { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] }
+                ]
+            });
+
+            // Update map based on year selection
+            document.getElementById("yearSlider").addEventListener("input", (e) => {
+                const year = e.target.value;
+                document.getElementById("currentYear").textContent = year;
+                // Here you would update map data based on year
+                console.log(`Loading data for year: ${year}`);
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+</body>
+</html>
