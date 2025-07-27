@@ -1,45 +1,68 @@
 let map;
+let markers = [];
 
 function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-        center: CONFIG.MAP.DEFAULT_CENTER,
-        zoom: CONFIG.MAP.DEFAULT_ZOOM,
-        styles: CONFIG.MAP.STYLES,
-        disableDefaultUI: true
-    });
+    try {
+        // Initialize map
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: CONFIG.MAP.DEFAULT_CENTER,
+            zoom: CONFIG.MAP.DEFAULT_ZOOM,
+            styles: CONFIG.MAP.STYLES,
+            disableDefaultUI: true,
+            zoomControl: true
+        });
 
-    // Initialize time slider
-    const slider = document.getElementById("yearSlider");
-    slider.addEventListener("input", (e) => {
-        const year = e.target.value;
-        document.getElementById("currentYear").textContent = year;
-        timeData.load(year).then(data => updateMarkers(data));
-    });
+        // Initialize time slider
+        document.getElementById("yearSlider").addEventListener("input", (e) => {
+            const year = e.target.value;
+            document.getElementById("currentYear").textContent = year;
+            updateMapForYear(year);
+        });
 
-    // Load initial data
-    timeData.load(CONFIG.TIME.DEFAULT_YEAR).then(data => updateMarkers(data));
+        // Load initial data
+        updateMapForYear(CONFIG.TIME.DEFAULT_YEAR);
+        document.getElementById('loading').style.display = 'none';
+
+    } catch (error) {
+        console.error("Map initialization failed:", error);
+    }
 }
 
-function updateMarkers(data) {
+async function updateMapForYear(year) {
     // Clear existing markers
-    if (window.markers) {
-        window.markers.forEach(marker => marker.setMap(null));
-    }
+    markers.forEach(marker => marker.setMap(null));
+    markers = [];
 
-    // Add new markers
-    window.markers = data.map(item => {
-        return new google.maps.Marker({
+    // Load new data
+    const data = await timeData.load(year);
+    
+    // Add markers
+    data.forEach(item => {
+        const marker = new google.maps.Marker({
             position: { lat: item.lat, lng: item.lng },
             map: map,
-            title: `${item.name} (${item.type})`,
+            title: `${item.name} (${year})`,
             icon: {
                 path: google.maps.SymbolPath.CIRCLE,
-                fillColor: item.type === "startup" ? "#6e44ff" : "#ff2d75",
+                fillColor: CONFIG.MARKERS.COLORS[item.type] || '#ffffff',
                 fillOpacity: 0.9,
                 scale: item.size,
-                strokeColor: "#000",
-                strokeWeight: 2
+                strokeColor: '#000000',
+                strokeWeight: 1.5
             }
         });
+        markers.push(marker);
     });
 }
+
+// Global error handler
+window.gm_authFailure = function() {
+    document.getElementById('loading').innerHTML = `
+        <p style="color: #ff2d75; padding: 20px;">
+            Google Maps Error: API key rejected<br><br>
+            Verify in <a href="https://console.cloud.google.com" target="_blank" style="color: #00f7ff;">Google Cloud Console</a>:
+            <br>1. API key restrictions
+            <br>2. Enabled APIs (Maps, Places)
+            <br>3. Billing is active
+        </p>`;
+};
