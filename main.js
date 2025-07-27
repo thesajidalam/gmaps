@@ -13,7 +13,7 @@ const CONFIG = {
   ],
   INITIAL_COORDS: { lat: 37.7749, lng: -122.4194 },
   INITIAL_ZOOM: 12,
-  API_KEY: 'YOUR_GOOGLE_MAPS_API_KEY'
+  API_KEY: 'AIzaSyBdyGwUTzp43BvST1D5wSuFmey0jiwprd8'
 };
 
 // data.js - Sample time-based data (replace with real API calls)
