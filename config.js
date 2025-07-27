@@ -1,6 +1,6 @@
 /**
  * Google Maps Time Machine Configuration
- * Contains API settings and default parameters
+ * Uses only Google Maps Platform APIs
  */
 
 const CONFIG = {
@@ -11,7 +11,7 @@ const CONFIG = {
     MIN_ZOOM: 5,
     MAX_ZOOM: 18,
     CONTROL_SIZE: 30,
-    RESTRICT_BOUNDS: null, // Set to bounds object if needed
+    RESTRICT_BOUNDS: null,
   },
 
   // Time Machine Parameters
@@ -22,11 +22,32 @@ const CONFIG = {
     TRANSITION_DURATION: 500, // ms
   },
 
-  // API Endpoints (Mock endpoints - replace with real API)
+  // Google Maps API Services
   API: {
-    BASE_URL: 'https://api.deloper.news/v1',
-    DATA_ENDPOINT: '/time-data',
-    GEOCODE_ENDPOINT: '/geocode',
+    // Geocoding (address ↔ coordinates)
+    GEOCODING: {
+      ENDPOINT: 'https://maps.googleapis.com/maps/api/geocode/json',
+      KEY: 'AIzaSyBdyGwUTzp43BvST1D5wSuFmey0jiwprd8', // Your existing key
+      FIELDS: 'geometry,name,formatted_address'
+    },
+    
+    // Places (for tech hub locations)
+    PLACES: {
+      ENDPOINT: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
+      KEY: 'AIzaSyBdyGwUTzp43BvST1D5wSuFmey0jiwprd8',
+      RADIUS: 50000, // meters (50km)
+      TYPES: ['electronics_store', 'university', 'point_of_interest'],
+      DEFAULT_PARAMS: {
+        keyword: 'tech hub',
+        language: 'en'
+      }
+    },
+    
+    // Time-based data simulation
+    TIME_DATA: {
+      USE_MOCK: true, // Simulate time data since GMaps doesn't have historical API
+      MOCK_YEARS: [1990, 1995, 2000, 2005, 2010, 2015, 2020, 2025]
+    }
   },
 
   // Map Style Configuration
@@ -61,8 +82,7 @@ const CONFIG = {
   },
 
   // Development Flags
-  DEBUG: true,
-  USE_MOCK_DATA: true
+  DEBUG: true
 };
 
 // Freeze config to prevent accidental modification
